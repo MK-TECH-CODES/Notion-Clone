@@ -25,11 +25,12 @@ export const workspacesRelations = relations(workspaces, ({many}) => ({
 	folders: many(folders),
 }));
 
-export const usersRelations = relations(users, ({one}) => ({
+export const usersRelations = relations(users, ({one, many}) => ({
 	usersInAuth: one(usersInAuth, {
 		fields: [users.id],
 		references: [usersInAuth.id]
 	}),
+	subscriptions: many(subscriptions),
 }));
 
 export const usersInAuthRelations = relations(usersInAuth, ({many}) => ({
@@ -50,7 +51,12 @@ export const pricesRelations = relations(prices, ({one, many}) => ({
 		fields: [prices.product_id],
 		references: [products.id]
 	}),
-	subscriptions: many(subscriptions),
+	subscriptions_price_id: many(subscriptions, {
+		relationName: "subscriptions_price_id_prices_id"
+	}),
+	subscriptions_price_id: many(subscriptions, {
+		relationName: "subscriptions_price_id_prices_id"
+	}),
 }));
 
 export const productsRelations = relations(products, ({many}) => ({
@@ -58,12 +64,22 @@ export const productsRelations = relations(products, ({many}) => ({
 }));
 
 export const subscriptionsRelations = relations(subscriptions, ({one}) => ({
-	price: one(prices, {
+	price_price_id: one(prices, {
 		fields: [subscriptions.price_id],
-		references: [prices.id]
+		references: [prices.id],
+		relationName: "subscriptions_price_id_prices_id"
+	}),
+	price_price_id: one(prices, {
+		fields: [subscriptions.price_id],
+		references: [prices.id],
+		relationName: "subscriptions_price_id_prices_id"
 	}),
 	usersInAuth: one(usersInAuth, {
 		fields: [subscriptions.user_id],
 		references: [usersInAuth.id]
+	}),
+	user: one(users, {
+		fields: [subscriptions.user_id],
+		references: [users.id]
 	}),
 }));
